@@ -22,7 +22,7 @@
             android:id="@+id/titleEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
+            android:inputType="textCapCharacters"
             android:textColor="?attr/colorOnBackground" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -50,6 +50,37 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/quantityLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Quantity"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/descriptionTextField"
+        app:layout_constraintTop_toBottomOf="@id/descriptionTextField"
+
+        />
+
+    <SeekBar
+        android:id="@+id/quantitySeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:max="10"
+        android:min="1"
+        android:progressBackgroundTint="?attr/colorOnBackground"
+        app:layout_constraintStart_toStartOf="@id/descriptionTextField"
+        app:layout_constraintTop_toBottomOf="@id/quantityLabelTextView"
+        app:layout_constraintEnd_toEndOf="@id/descriptionTextField"
+        />
+
+
+
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/priorityLabelTextView"
@@ -61,13 +92,14 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/descriptionTextField"
-        app:layout_constraintTop_toBottomOf="@id/descriptionTextField" />
+        app:layout_constraintTop_toBottomOf="@id/quantitySeekBar" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
         android:checkedButton="@id/radioButtonLow"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"

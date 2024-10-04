@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id ("kotlin-kapt")
-    //To use Kotlin Symbol Processing (KSP)
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
 }
 
@@ -42,8 +42,6 @@ android {
     }
 
 
-
-
 }
 
 dependencies {
@@ -70,13 +68,12 @@ dependencies {
 
     // Navigation component
     val nav_version = "2.7.7"
-    implementation ("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation ("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-    val epoxyVersion="5.1.4"
-    implementation ("com.airbnb.android:epoxy:$epoxyVersion")
+    val epoxyVersion = "5.1.4"
+    implementation("com.airbnb.android:epoxy:$epoxyVersion")
     kapt("com.airbnb.android:epoxy-processor:$epoxyVersion")
-
 
 
 }

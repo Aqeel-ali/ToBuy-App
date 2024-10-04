@@ -9,16 +9,46 @@
         android:id="@+id/homeFragment"
         android:name="com.aqeel.tobuy.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home"
-        >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_addItemEntityFragment"
             app:destination="@id/addItemEntityFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.aqeel.tobuy.ui.profile.ProfileFragment"
+        tools:layout="@layout/fragment_profile"
+        android:label="Profile"
+        >
+        <action
+            android:id="@+id/action_ProfileFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/addItemEntityFragment"
         android:name="com.aqeel.tobuy.ui.add.AddItemEntityFragment"
         android:label="Add"
-        tools:layout="@layout/fragment_add_item_entity"
-        />
+        tools:layout="@layout/fragment_add_item_entity">
+
+        <argument
+            android:name="ItemId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.aqeel.tobuy.ui.profile.AddCategoryFragment"
+        android:label="AddCategoryFragment"
+        tools:layout="@layout/fragment_add_category"
+        >
+        <argument
+            android:name="ItemId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
 </navigation>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.aqeel.tobuy.R
 import com.aqeel.tobuy.database.entity.ItemEntity
@@ -31,7 +32,7 @@ class HomeFragment:BaseFragment(),ItemEntityInterface {
         val controller=HomeEpoxyController(this)
         binding.homeEpoxyRecycler.setController(controller)
 
-        sharedViewModel.itemEntitesLiveData.observe(viewLifecycleOwner){itemList->
+        sharedViewModel.itemEntitiesLiveData.observe(viewLifecycleOwner){ itemList->
         controller.elements=itemList as ArrayList<ItemEntity>
         }
 
@@ -65,6 +66,16 @@ class HomeFragment:BaseFragment(),ItemEntityInterface {
         val updatedItemEntity=itemEntity.copy(priority = newPriority)
         sharedViewModel.updateItem(updatedItemEntity)
     }
+
+    override fun onItemSelected(itemEntity: ItemEntity) {
+        val navDirections:NavDirections=HomeFragmentDirections.actionHomeFragmentToAddItemEntityFragment(itemEntity.id)
+        navigateViaGraph(navDirections)
+    }
+
+    //    override fun onItemSelected(itemEntity: ItemEntity) {
+//        val navDirections=HomeFragmentDirections.actionHomeFragmentToAddItemEntityFragment(itemEntity.id)
+//        navigateViaGraph(navDirections)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

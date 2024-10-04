@@ -9,9 +9,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.room.Room
@@ -19,6 +22,7 @@ import androidx.room.RoomDatabase
 import com.aqeel.tobuy.R
 import com.aqeel.tobuy.arch.ToBuyModel
 import com.aqeel.tobuy.database.AppDatabase
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,13 +40,34 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        var navHostFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController=navHostFragment.navController
 
-        appBarConfiguration=AppBarConfiguration(navController.graph)
+         appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.ProfileFragment,
+            )
+        )
+
+        //setup top app bar
         setupActionBarWithNavController(navController,appBarConfiguration)
 
+        //setup bottom app bar
+        val bottomNavigationView=findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        setupWithNavController(
+         bottomNavigationView   ,
+        navController
+        )
 
+        // اخفاء واضهار الشريط السفلي
+        navController.addOnDestinationChangedListener{controller,destination,argement ->
+            if(appBarConfiguration.topLevelDestinations.contains(destination.id)){
+            bottomNavigationView.isVisible=true
+            }else{
+                bottomNavigationView.isGone=true
+            }
+        }
 
     }
 

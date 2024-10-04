@@ -2,6 +2,7 @@ package com.aqeel.tobuy.ui
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
 import com.aqeel.tobuy.arch.ToBuyModel
 import com.aqeel.tobuy.database.AppDatabase
 
@@ -11,6 +12,14 @@ abstract class BaseFragment:Fragment() {
 
     protected fun navigateViaGraph(actionId:Int){
         mainActivity.navController.navigate(actionId)
+    }
+
+    protected fun navigateViaGraph(navDirections: NavDirections){
+        mainActivity.navController.navigate(navDirections)
+    }
+
+    protected fun navigateUp(){
+        mainActivity.navController.navigateUp()
     }
 
     protected val mainActivity:MainActivity get() = activity as MainActivity
