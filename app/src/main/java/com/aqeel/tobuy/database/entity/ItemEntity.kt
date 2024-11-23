@@ -5,11 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "item_entity")
 data class ItemEntity (
-    @PrimaryKey val id:String="" ,
+    @PrimaryKey val id:String="",
     val title:String="",
     val description:String?=null,
     val priority:Int,
-    val createdAr:Long=0L,
+    val createdAt:Long=0L,
     val categoryId:String=""
 
 )

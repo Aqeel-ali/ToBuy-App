@@ -9,6 +9,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.aqeel.tobuy.R
+import com.aqeel.tobuy.database.entity.CategoryEntity
 import com.aqeel.tobuy.database.entity.ItemEntity
 import com.aqeel.tobuy.databinding.FragmentAddItemEntityBinding
 import com.aqeel.tobuy.ui.BaseFragment
@@ -21,9 +22,9 @@ class AddItemEntityFragment:BaseFragment() {
    private val safeArgs:AddItemEntityFragmentArgs by navArgs()
 
     private val selectedItemEntity:ItemEntity? by lazy {
-        sharedViewModel.itemEntitiesLiveData.value?.find {
-            it.id==safeArgs.ItemId
-        }
+        sharedViewModel.itemWithCategoryEntitiesLiveData.value?.find {
+            it.itemEntity.id==safeArgs.ItemId
+        }?.itemEntity
     }
 
     private var isEditMode:Boolean=false
@@ -63,9 +64,19 @@ class AddItemEntityFragment:BaseFragment() {
                     //Whoops
                 }
             }
-
+        }
+        val categoryViewStateEpoxyController=CategoryViewStateEpoxyController{ categoryId->
+            sharedViewModel.onCategorySelected(categoryId,true)
+        }
+        binding.CategoryEpoxyRecycler.setController(categoryViewStateEpoxyController)
+        sharedViewModel.onCategorySelected(selectedItemEntity?.categoryId?:CategoryEntity.DEFAULT_CATEGORY_ID)
+        sharedViewModel.categoryViewStateLiveData.observe(viewLifecycleOwner){viewState->
+        categoryViewStateEpoxyController.viewState=viewState
 
         }
+
+
+
 
         binding.saveButton.setOnClickListener {
             saveItemEntityToDatabase()
@@ -94,6 +105,7 @@ class AddItemEntityFragment:BaseFragment() {
 
             }
 
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 //nothing todo
             }
@@ -103,17 +115,18 @@ class AddItemEntityFragment:BaseFragment() {
             }
         })
 
-        sharedViewModel.transactionCompleteLiveData.observe(viewLifecycleOwner){isComplete->
-            if (isComplete){
+        sharedViewModel.transactionCompleteLiveData.observe(viewLifecycleOwner){event->
+
+            event.getContent()?.let {
                 if (isEditMode){
                     navigateUp()
                     return@observe
                 }
                 navigateUp()
-            binding.titleEditText.text=null
+                binding.titleEditText.text=null
                 binding.titleEditText.requestFocus()
-             binding.descriptionEditText.text=null
-            binding.radioGroup.check(R.id.radioButtonLow)
+                binding.descriptionEditText.text=null
+                binding.radioGroup.check(R.id.radioButtonLow)
                 Toast.makeText(requireContext(),"Item Added",Toast.LENGTH_SHORT).show()
             }
 
@@ -142,11 +155,15 @@ val itemDescription=binding.descriptionEditText.text.toString().trim()
             else -> 0
         }
 
+
+val itemCategoryId=sharedViewModel.categoryViewStateLiveData.value?.getSelectedCategoryId()?:return
+
         if (isEditMode){
             val itemEntity=selectedItemEntity!!.copy(
                 title = itemTitle,
                 description = itemDescription,
                 priority = itemPriority,
+                categoryId = itemCategoryId
             )
             sharedViewModel.updateItem(itemEntity)
             Toast.makeText(requireActivity(),"Update Item Done",Toast.LENGTH_SHORT).show()
@@ -159,8 +176,8 @@ val itemDescription=binding.descriptionEditText.text.toString().trim()
             title = itemTitle,
             description = itemDescription,
             priority = itemPriority,
-            createdAr = System.currentTimeMillis(),
-            categoryId = ""//todo update this later when we have category
+            createdAt = System.currentTimeMillis(),
+            categoryId = itemCategoryId
 
         )
 
@@ -171,11 +188,6 @@ val itemDescription=binding.descriptionEditText.text.toString().trim()
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        sharedViewModel.transactionCompleteLiveData.postValue(false)
-
-    }
 
 
     override fun onDestroy() {

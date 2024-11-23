@@ -3,7 +3,7 @@ package com.aqeel.tobuy.ui
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavDirections
-import com.aqeel.tobuy.arch.ToBuyModel
+import com.aqeel.tobuy.arch.ToBuyViewModel
 import com.aqeel.tobuy.database.AppDatabase
 
 abstract class BaseFragment:Fragment() {
@@ -26,6 +26,11 @@ abstract class BaseFragment:Fragment() {
 
     protected val appDatabase: AppDatabase get() = AppDatabase.getDatabase(requireContext())
 
-    protected val sharedViewModel :ToBuyModel by activityViewModels()
+    protected val sharedViewModel :ToBuyViewModel by activityViewModels()
+
+
+
+
+
 
 }

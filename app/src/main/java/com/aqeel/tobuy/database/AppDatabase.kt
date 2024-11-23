@@ -32,7 +32,6 @@ abstract class AppDatabase : RoomDatabase() {
                 ).addMigrations(
 MIGRATION_1_2()
                 )
-
                     .build()
                 return appDatabase!!
             }
@@ -46,6 +45,7 @@ MIGRATION_1_2()
             db.execSQL("CREATE TABLE IF NOT EXISTS 'category_entity' ( 'id' TEXT NOT NULL ,'name' TEXT NOT NULL,PRIMARY KEY('id') ) ")
         }
     }
+
 
     abstract fun itemEntityDao(): ItemEntityDao
     abstract fun categoryEntityDao(): CategoryEntityDao

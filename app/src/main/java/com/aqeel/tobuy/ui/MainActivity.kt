@@ -1,14 +1,9 @@
 package com.aqeel.tobuy.ui
 
-import android.app.Activity
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -17,10 +12,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.aqeel.tobuy.R
-import com.aqeel.tobuy.arch.ToBuyModel
+import com.aqeel.tobuy.arch.ToBuyViewModel
 import com.aqeel.tobuy.database.AppDatabase
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -35,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val viewModel:ToBuyModel by viewModels()
+        val viewModel:ToBuyViewModel by viewModels()
         viewModel.init(AppDatabase.getDatabase(this))
 
 

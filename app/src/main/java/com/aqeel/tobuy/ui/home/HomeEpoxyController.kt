@@ -6,7 +6,8 @@ import androidx.core.view.isVisible
 import com.airbnb.epoxy.EpoxyController
 import com.aqeel.tobuy.R
 import com.aqeel.tobuy.addHeaderModel
-import com.aqeel.tobuy.database.entity.ItemEntity
+import com.aqeel.tobuy.arch.ToBuyViewModel
+import com.aqeel.tobuy.database.entity.ItemWithCategoryEntity
 import com.aqeel.tobuy.databinding.ModelEmptyStateBinding
 import com.aqeel.tobuy.databinding.ModelItemEntityBinding
 import com.aqeel.tobuy.epoxy.LoadingEpoxyModel
@@ -17,89 +18,84 @@ class HomeEpoxyController(
     private val itemEntityInterface: ItemEntityInterface
 ) : EpoxyController() {
 
-    var isLoading: Boolean = true
+    var viewState :ToBuyViewModel.HomeViewState= ToBuyViewModel.HomeViewState(isLoading=true)
         set(value) {
             field = value
-            if (field) {
-                requestModelBuild()
-            }
-        }
-
-    var elements = ArrayList<ItemEntity>()
-        set(value) {
-            field = value
-            isLoading = false
             requestModelBuild()
         }
 
     override fun buildModels() {
 
-        if (isLoading) {
+        if (viewState.isLoading) {
             LoadingEpoxyModel().id("Loading state").addTo(this)
             return
-        } else if (elements.isEmpty()) {
+        } else if (viewState.dataList.isEmpty()) {
             EmptyStateEopxyModel().id("empty_state").addTo(this)
             return
-        } else {
+        }
 
-            var currentpriority: Int = -1
-            elements.sortedByDescending {
-                it.priority
-            }.forEach { item ->
-                if (item.priority != currentpriority) {
-                    currentpriority = item.priority
-                    addHeaderModel(getHeaderTextFromPriority(currentpriority))
-                }
+//            var currentpriority: Int = -1
+//            viewState.dataList.sortedByDescending {
+//                it.itemEntity.priority
+//            }.forEach { item ->
+//                if (item.itemEntity.priority != currentpriority) {
+//                    currentpriority = item.itemEntity.priority
+//                    addHeaderModel(getHeaderTextFromPriority(currentpriority))
+//                }
+//                ItemEntityEpoxyModel(item, itemEntityInterface).id(item.itemEntity.id).addTo(this)
+//
+//        }
 
-                ItemEntityEpoxyModel(item, itemEntityInterface).id(item.id).addTo(this)
+        viewState.dataList.forEach { dataItem ->
+            if (dataItem.isHeader) {
+                addHeaderModel(dataItem.data as String)
+                return@forEach
             }
+
+            val itemWithCategoryEntity = dataItem.data as ItemWithCategoryEntity
+            ItemEntityEpoxyModel(itemWithCategoryEntity, itemEntityInterface)
+                .id(itemWithCategoryEntity.itemEntity.id)
+                .addTo(this)
         }
 
     }
 
-    private fun getHeaderTextFromPriority(priority: Int): String {
-        return when (priority) {
-            1 -> "Low"
-            2 -> "Meduim"
-            else -> "High"
-        }
-    }
+
 
     data class ItemEntityEpoxyModel(
-        val itemEntity: ItemEntity,
+        val item: ItemWithCategoryEntity,
         val itemEntityInterface: ItemEntityInterface
     ) : ViewBindingKotlinModel<ModelItemEntityBinding>(R.layout.model_item_entity) {
         override fun ModelItemEntityBinding.bind() {
-            itemTitle.text = itemEntity.title
+            titleTextView.text = item.itemEntity.title
 
-            if (itemEntity.description == null) {
-                itemDescription.isGone = true
+            if (item.itemEntity.description == null) {
+                descriptionTextView.isGone = true
             } else {
-                itemDescription.isVisible = true
-                itemDescription.text = itemEntity.description
+                descriptionTextView.isVisible = true
+                descriptionTextView.text = item.itemEntity.description
             }
 
 
 
-            itemPriority.setOnClickListener {
-                itemEntityInterface.onBumpPriority(itemEntity)
+            priorityTextView.setOnClickListener {
+                itemEntityInterface.onBumpPriority(item.itemEntity)
             }
 
-            val color = when (itemEntity.priority) {
+            val color = when (item.itemEntity.priority) {
                 1 -> android.R.color.holo_green_light
                 2 -> android.R.color.holo_orange_light
                 3 -> android.R.color.holo_red_light
                 else -> android.R.color.holo_purple
             }
-            itemPriority.setBackgroundColor(ContextCompat.getColor(root.context, color))
+            priorityTextView.setBackgroundColor(ContextCompat.getColor(root.context, color))
+
+            categoryNameTextView.text=item.categoryEntity?.name
 
             root.setOnClickListener {
-                itemEntityInterface.onItemSelected(itemEntity)
+                itemEntityInterface.onItemSelected(item.itemEntity)
             }
 
-//            root.setOnClickListener {
-//                itemEntityInterface.onItemSelected(itemEntity)
-//            }
 
         }
 

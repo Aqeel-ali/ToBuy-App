@@ -31,10 +31,10 @@ class AddCategoryFragment :BaseFragment() {
             saveCategoryToDatabase()
         }
 
-        sharedViewModel.transactionCompleteLiveData.observe(viewLifecycleOwner){iscomplete->
-            if (iscomplete){
-                navigateUp()
-            }
+        sharedViewModel.transactionCompleteLiveData.observe(viewLifecycleOwner){event->
+          event.getContent()?.let {
+              navigateUp()
+          }
         }
 
     }
@@ -55,12 +55,8 @@ class AddCategoryFragment :BaseFragment() {
 
         sharedViewModel.insertCategory(categoryEntity)
 
+    }
 
-    }
-    override fun onPause() {
-        super.onPause()
-        sharedViewModel.transactionCompleteLiveData.postValue(false)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

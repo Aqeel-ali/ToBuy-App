@@ -32,8 +32,8 @@ class HomeFragment:BaseFragment(),ItemEntityInterface {
         val controller=HomeEpoxyController(this)
         binding.homeEpoxyRecycler.setController(controller)
 
-        sharedViewModel.itemEntitiesLiveData.observe(viewLifecycleOwner){ itemList->
-        controller.elements=itemList as ArrayList<ItemEntity>
+        sharedViewModel.homeViewStateLiveData .observe(viewLifecycleOwner){ viewState->
+        controller.viewState=viewState
         }
 
      //setup swipe to delete
@@ -47,8 +47,8 @@ class HomeFragment:BaseFragment(),ItemEntityInterface {
                     position: Int,
                     direction: Int
                 ) {
-                   val itemThatWasRemove =model?.itemEntity?:return
-                    sharedViewModel.deleteItem(itemThatWasRemove)
+                   val itemThatWasRemove =model?.item?:return
+                    sharedViewModel.deleteItem(itemThatWasRemove.itemEntity)
                 }
             })
 

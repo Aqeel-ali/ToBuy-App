@@ -3,6 +3,7 @@ package com.aqeel.tobuy.arch
 import com.aqeel.tobuy.database.AppDatabase
 import com.aqeel.tobuy.database.entity.CategoryEntity
 import com.aqeel.tobuy.database.entity.ItemEntity
+import com.aqeel.tobuy.database.entity.ItemWithCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 class ToBuyRepository(
@@ -21,6 +22,9 @@ class ToBuyRepository(
 
       fun getAllItems(): Flow<List<ItemEntity>> {
         return appDatabase.itemEntityDao().getAll()
+    }
+    fun getItemsWithCategory(): Flow<List<ItemWithCategoryEntity>> {
+        return appDatabase.itemEntityDao().getAllItemWithCategory()
     }
 
     suspend fun updateItem(itemEntity: ItemEntity){
